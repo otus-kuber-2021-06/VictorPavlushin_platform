@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paymentservice
+  labels:
+    app: paymentservice
+spec:
+  replicas: 3
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 100%
+  selector:
+    matchLabels:
+      tier: paymentservice
+  template:
+    metadata:
+      labels:
+        tier: paymentservice
+        app: paymentservice
+    spec:
+      containers:
+      - name: server
+        image: docker.io/vii98/paymentservice:v0.0.2

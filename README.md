@@ -1,5 +1,5 @@
 <details>
-<summary><b>Выполнено ДЗ №4</b></summary>
+<summary><b>Выполнено ДЗ №5</b></summary>
 
  - [X] Основное ДЗ
  - [X] Задания со *

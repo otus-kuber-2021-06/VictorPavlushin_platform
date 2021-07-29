@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: paymentservice
+  labels:
+    app: paymentservice
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: paymentservice
+  template:
+    metadata:
+      labels:
+        tier: paymentservice
+        app: paymentservice
+    spec:
+      containers:
+      - name: server
+        image: docker.io/vii98/paymentservice:v0.0.1

@@ -1,4 +1,32 @@
 <details>
+<summary><b>Выполнено ДЗ №4</b></summary>
+
+ - [X] Основное ДЗ
+
+## В процессе сделано:
+ - Пункт 1: Созданы и применены манифест файлы для задачи 1;
+ - Пункт 2: Созданы и применены манифест файлы для задачи 2;
+ - Пункт 3: Созданы и применены манифест файлы для задачи 3; 
+
+## Как запустить проект:
+ - Применить манифесты kubectl apply -f *.yaml
+
+## Как проверить работоспособность:
+ - kubectl get ns
+ - kubectl get pods
+ - kubectl get sa [-n NameSpace]
+ - kubectl describe sa USER
+ - kubectl get clusterrole [-n NameSpace]
+ - kubectl get role [-n NameSpace]
+ - kubectl get clusterrolebindings [-n NameSpace]
+ - kubectl get rolebindings [-n NameSpace]
+ - kubectl auth can-i VERB pods -A --as system:serviceaccount:default:USER
+
+## PR checklist:
+ - [X] Выставлен label с темой домашнего задания
+</details>
+
+<details>
 <summary><b>Выполнено ДЗ №3</b></summary>
 
  - [X] Основное ДЗ

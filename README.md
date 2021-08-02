@@ -1,4 +1,25 @@
 <details>
+<summary><b>Выполнено ДЗ №6</b></summary>
+
+ - [X] Основное ДЗ
+ - [X] Задания со *
+
+## В процессе сделано:
+ - Скопироаны и препенены фаилы minio-statefulset.yaml и minio-headless-service.yaml
+ - Создан фаил секретов minio-secrets.yaml и переделан statefulSet на использование секретов.
+
+## Как запустить проект:
+ - Применить манифесты kubectl apply -f *.yaml
+
+## Как проверить работоспособность:
+ - mc *
+
+## PR checklist:
+ - [X] Выставлен label с темой домашнего задания
+ - [X] Выставлена метка Review Required
+</details>
+
+<details>
 <summary><b>Выполнено ДЗ №5</b></summary>
 
  - [X] Основное ДЗ

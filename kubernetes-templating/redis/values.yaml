@@ -1,0 +1,12 @@
+image:
+  tag: redis:alpine
+
+port: 6379
+
+resources:
+  limits:
+    memory: 256Mi
+    cpu: 125m
+  requests:
+    cpu: 70m
+    memory: 200Mi

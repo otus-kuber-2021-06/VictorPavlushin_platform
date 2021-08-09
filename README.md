@@ -46,7 +46,8 @@
    |  1 | some data   |
    |  2 | some data-2 |
    +----+-------------+
-   ```python
+   ```
+```python
 @kopf.on.update('mysqls', field='spec.password') #Подписываемся на события из mysqls с изменением в поле spec.password
 def update_pass(spec, name, old, new, status, namespace, logger, **kwargs):
     api_instance = kubernetes.client.api.core_v1_api.CoreV1Api()
@@ -59,12 +60,7 @@ def update_pass(spec, name, old, new, status, namespace, logger, **kwargs):
         if result.items[0].status.phase == 'Running': #На всякий случай проверяем что он в статусе Running
             resp = kubernetes.stream.stream(api_instance.connect_get_namespaced_pod_exec,  result.items[0].metadata.name,  namespace,  command=exec_command,  stderr=True, stdin=True, stdout=True, tty=False) #Меняем пароль
             print(f"{resp}") #Для дебага :)
-   ```
-   
-   
-## Вопросы:
- - Вопрос: почему объект создался, хотя мы создали CR, до того, как запустили контроллер?
-   Когда контроллер запустился он прочитал "БД" и сравнил с тем с соянием на текущий момент.
+```
 
 ## PR checklist:
  - [X] Выставлен label с темой домашнего задания

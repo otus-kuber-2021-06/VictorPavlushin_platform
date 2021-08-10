@@ -20,6 +20,13 @@
    ```python
    api.create_namespaced_job('default', restore_job)
    ```
+   результат:
+```bash
+[vii@localhost deploy]$ kubectl describe mysqls.otus.homework mysql-instance | grep ^Status -A2
+Status:
+  mysql_on_create:
+    Message:  mysql-instance created with restore-job
+```
  - Задание со звездой 2: выполнено
    Работает:
    ```bash

@@ -1,4 +1,80 @@
 <details>
+<summary><b>Выполнено ДЗ №8</b></summary>
+
+ - [X] Основное ДЗ
+ - [X] Задания со *
+
+## В процессе сделано:
+ - Задание по CRD: выставленны все поля как обязательные
+ - MySQL контроллер: Поправлены темплейты, а также добавлено удаление PV котое не удалялось хотя и есть в зависимостях. Самописный
+   Вопрос: почему объект создался, хотя мы создали CR, до того, как запустили контроллер?
+   Согласно документации https://kopf.readthedocs.io/en/latest/walkthrough/starting/ это нрмальное поведение, и скорее всего при запуске оператора kopf смотрит events.events.k8s.io и от туда выберает нужные события.
+ - Деплой оператора: из образа docker.io/vii98/mysql-operator:latest
+ - Проверки ручные прошли
+ - Задание со звездой 1: В конце функции ставится:
+   ```python
+      return {'message': f"mysql-instance created {r_result} restore-job"}
+   ```
+   который и отображается в статусе
+   `r_result` берется в зависимости от успешности выполнения:
+   ```python
+   api.create_namespaced_job('default', restore_job)
+   ```
+   результат:
+```bash
+[vii@localhost deploy]$ kubectl describe mysqls.otus.homework mysql-instance | grep ^Status -A2
+Status:
+  mysql_on_create:
+    Message:  mysql-instance created with restore-job
+```
+ - Задание со звездой 2: выполнено
+   Работает:
+   ```bash
+   [vii@localhost deploy]$ export MYSQLPOD=$(kubectl get pods -l app=mysql-instance -o jsonpath="{.items[*].metadata.name}")
+   [vii@localhost deploy]$ kubectl exec -it $MYSQLPOD -- mysql -potuspassword -e "select * from test;" otus-database
+   mysql: [Warning] Using a password on the command line interface can be insecure.
+   +----+-------------+
+   | id | name        |
+   +----+-------------+
+   |  1 | some data   |
+   |  2 | some data-2 |
+   +----+-------------+
+   [vii@localhost deploy]$ kubectl patch mysqls.otus.homework mysql-instance --patch "$(echo -e 'spec:\n  password: otuspassword1')" --type=merge
+   mysql.otus.homework/mysql-instance patched
+   [vii@localhost deploy]$ kubectl exec -it $MYSQLPOD -- mysql -potuspassword -e "select * from test;" otus-database
+   mysql: [Warning] Using a password on the command line interface can be insecure.
+   ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
+   command terminated with exit code 1
+   [vii@localhost deploy]$ kubectl exec -it $MYSQLPOD -- mysql -potuspassword1 -e "select * from test;" otus-database
+   mysql: [Warning] Using a password on the command line interface can be insecure.
+   +----+-------------+
+   | id | name        |
+   +----+-------------+
+   |  1 | some data   |
+   |  2 | some data-2 |
+   +----+-------------+
+   ```
+```python
+@kopf.on.update('mysqls', field='spec.password') #Подписываемся на события из mysqls с изменением в поле spec.password
+def update_pass(spec, name, old, new, status, namespace, logger, **kwargs):
+    api_instance = kubernetes.client.api.core_v1_api.CoreV1Api()
+    result = api_instance.list_namespaced_pod(namespace, label_selector="app="+name, watch=False) #Ищем нужный под
+    exec_command = [
+            '/bin/sh',
+            '-c',
+            f"mysql -u root -p{ old } -e \"update user set authentication_string=password(\'{new}\') where user='root';FLUSH PRIVILEGES;\" mysql"] #Формируем команду которая сменит пароль
+    if len(result.items) == 1: #На всякий случай проверяем что под нашелся и он один
+        if result.items[0].status.phase == 'Running': #На всякий случай проверяем что он в статусе Running
+            resp = kubernetes.stream.stream(api_instance.connect_get_namespaced_pod_exec,  result.items[0].metadata.name,  namespace,  command=exec_command,  stderr=True, stdin=True, stdout=True, tty=False) #Меняем пароль
+            print(f"{resp}") #Для дебага :)
+```
+
+## PR checklist:
+ - [X] Выставлен label с темой домашнего задания
+</details>
+
+
+<details>
 <summary><b>Выполнено ДЗ №7</b></summary>
 
  - [X] Основное ДЗ

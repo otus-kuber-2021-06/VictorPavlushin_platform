@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: web
+  labels:
+    team: frontend
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: web
+  endpoints:
+  - path: /metrics
+    port: nginx-ex-port
+    interval: 5s
+  namespaceSelector:
+    matchNames:
+    - default
